@@ -5,7 +5,6 @@
 #python3
 #import nltk
 #nltk.download("book")
-
 from nltk.book import *
 import os
 from os import path

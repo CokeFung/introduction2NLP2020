@@ -1,5 +1,6 @@
 # Fungkiat Phadejtaku
 # 60070069
+# github: https://github.com/CokeFung/introduction2NLP2020
 
 #python3
 #import nltk
@@ -34,6 +35,14 @@ def string2wordcloud(text, num):
 	# image = wordcloud.to_image()
 	# image.show()
 
+def writeFreq2File(text, num):
+	text2write = "No.\tWord\t\tFrequency\n\n"
+	for i in range(len(text)):
+		text2write += ("%02d" % (i+1))+"\t"+text[i][0]+"\t\t"+str(text[i][1])+"\n"
+	f = open(("./word_freq/word_freq_text"+str(num)+".txt"), "w+")
+	f.write(text2write)
+	f.close()
+
 def doWordCloud(words_from_book, num):
 	words_fd = FreqDist(words_from_book)
 	words = {}
@@ -47,8 +56,9 @@ def doWordCloud(words_from_book, num):
 				words[tmp] = words_fd[i]
 	text = sorted(sorted(words.items()), key=lambda x:x[1]*-1)[:30]
 	#print(text)
-	text = list2string(text)
-	string2wordcloud(text, num)
+	text2 = list2string(text)
+	string2wordcloud(text2, num)
+	writeFreq2File(text, num)
 
 def main():
 	#generate text books's name

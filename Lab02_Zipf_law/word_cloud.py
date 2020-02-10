@@ -4,11 +4,11 @@
 
 #python3
 #import nltk
-#nltk.download("book"
+#nltk.download("book")
 from nltk.book import *
 import os
 from os import path
-from wordcloud import WordCloud, STOPWORDS
+import matplotlib.pyplot as pyplot
 
 def check_word(string):
 	alp = "abcdefghijklmnopqrstuvwxyz".upper()
@@ -27,20 +27,26 @@ def list2string(word_list):
 	#print(text)
 	return text
 
-def string2wordcloud(text, num):
-	wordcloud = WordCloud(max_words=30, max_font_size=70, scale=10, margin=5, stopwords=['#', '#']).generate(text)
-	#crate directory before run code.
-	wordcloud.to_file("./pic/wordcloud_text" + str(num) + ".png")
-	# image = wordcloud.to_image()
-	# image.show()
+def plot_graph_of_k(k_list, num):
+	#(list(k_list.values()))
+	pyplot.figure()
+	pyplot.plot(list(k_list.keys()), list(k_list.values()))
+	pyplot.xlabel('Rank')
+	pyplot.ylabel('k value (Freq x Rank)')
+	pyplot.title('Book ' + str(num))
+	pyplot.savefig('./graph/book'+str(num)+".png")
 
 def writeFreq2File(text, num):
-	text2write = "No.\tWord\t\tFrequency\n\n"
+	text2write = "Rank\tWord\t\tFrequency\tFreq x Rank\n"
+	k_list = {}
 	for i in range(len(text)):
-		text2write += ("%02d" % (i+1))+"\t"+text[i][0]+"\t\t"+str(text[i][1])+"\n"
+		k_of_rank = (i+1)*text[i][1]
+		k_list[i+1] = k_of_rank
+		text2write += ("%02d" % (i+1))+"\t"+text[i][0]+"\t\t"+str(text[i][1])+"\t\t"+("%d" % k_of_rank)+"\n"
 	f = open(("./word_freq/word_freq_text"+str(num)+".txt"), "w+")
 	f.write(text2write)
 	f.close()
+	plot_graph_of_k(k_list, num)
 
 def doWordCloud(words_from_book, num):
 	words_fd = FreqDist(words_from_book)
@@ -56,7 +62,6 @@ def doWordCloud(words_from_book, num):
 	text = sorted(sorted(words.items()), key=lambda x:x[1]*-1)[:30]
 	#print(text)
 	text2 = list2string(text)
-	string2wordcloud(text2, num)
 	writeFreq2File(text, num)
 
 def main():

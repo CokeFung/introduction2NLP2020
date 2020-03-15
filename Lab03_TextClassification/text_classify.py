@@ -1,20 +1,16 @@
 import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
-
-
-# Text Preprocessing
-import nltk
-# nltk.download("all")
+#import nltk
+#nltk.download('stopwords')
+from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 import string
-from nltk.tokenize import word_tokenize
 from nltk import NaiveBayesClassifier, classify
 
 def normalization(text_list):
 	features = {}
-	word_list = [word.lower() for word in text_list]
+	stop_words = stopwords.words('english')
+	#stop words removal
+	word_list = [word.lower() for word in text_list if word not in stop_words]
 	for word in word_list:
 		features[word] = True
 	return features
@@ -36,7 +32,7 @@ def train(features, proportion):
 def evaluate(train_set, test_set, classifier):
 	print("Accuracy on the training set = " + str(classify.accuracy(classifier, train_set)))
 	print("Accuracy on the testing set = " + str(classify.accuracy(classifier, test_set)))
-	print()
+	print()	
 	classifier.show_most_informative_features(50)
 
 def main():
@@ -55,6 +51,5 @@ def main():
 
 	train_set, test_set, classifier = train(all_features, 0.8)
 	evaluate(train_set, test_set, classifier)
-
 
 main()
